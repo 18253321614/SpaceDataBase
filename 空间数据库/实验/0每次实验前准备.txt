@@ -1,0 +1,11 @@
+1、找到C:\app\K02\product\11.2.0\dbhome_1\NETWORK\ADMIN中的tnsnames.ora和listener.ora，备份后分别打开这2个文件将HOST = JSZX502-59中的值改为自己的计算机名（“计算机”图标右键“属性”中可查），保存并关闭。
+
+2、打开"开始|控制面板|系统和安全|管理工具|服务"或开始--运行中输入services.msc，在OracleOraDb11g_homeTNSListener、OracleServiceORCL服务上分别右键选启动
+
+
+3、打开命令提示符界面，输入以下命令：
+C:\users\k01>sqlplus sys/oracle as sysdba
+SQL>alter profile default limit password_life_time unlimited;
+SQL>alter user sde identified by sde;
+
+在ArcSde Service(esri_sde)服务上右键选启动
