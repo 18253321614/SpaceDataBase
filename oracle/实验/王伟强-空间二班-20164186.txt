@@ -1,0 +1,27 @@
+1、输出所有员工的员工名、员工号、工资和部门号
+begin
+  for v_emp in (select ename,empno,sal,deptno from emp where deptno=20)
+    loop
+    dbms_output.put_line(v_emp.ename||' '||v_emp.empno||' '||v_emp.sal||' '||v_emp.emptno);
+    end loop;
+end;
+2、创建一个emp1表，其结构和数据与emp表完全一致。用游标完成操作：显示emp1表中工资低于1500的职员
+   信息,并显示如果给他们涨30%工资后的工资
+set serverout on
+declare
+  v_emp emp%rowtype;
+  v_sal number;
+  cursor emp is select * from emp where sal<v_sal;
+Begin
+  v_sal:=&sal;
+  if emp%isopen=false then open emp;
+  end if;
+  fetch emp into v_emp;
+  while emp%found
+    loop
+      v_emp.sal=v_emp.sal+v_emp.sal*0.3;
+      dbms_output.put_line(v_emp.sal);
+      fetch emp into v_emp;
+    end loop;
+    close emp;
+end;
