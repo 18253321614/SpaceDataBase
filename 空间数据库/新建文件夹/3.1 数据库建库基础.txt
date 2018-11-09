@@ -1,0 +1,162 @@
+—— 新建用户及密码，授予表空间、临时空间等信息
+SQL>create user scuser identified by scuser
+    default tablespace users
+    temporary tablespace temp
+    profile default;
+
+
+
+—— 在SYS用户下授予新用户权限及自定义表空间权限
+SQL>grant dba to scuser;
+SQL>grant create any table to scuser;
+SQL>grant alter any table to scuser;
+SQL>grant drop any table to scuser;
+SQL>alter user scuser quota unlimited on users;
+
+
+
+—— 账户解锁
+SQL>alter user scuser account unlock;
+
+
+
+
+
+—— 导入SCUSER用户
+C:\>imp scuser/scuser@orcl file=c:\test\scott_table.dmp fromuser=scott touser=scuser
+
+
+
+—— 新建EMP_TEST表，新增数据列ID，INT（4）自增字段；NAME，VARCHAR2（12）；JOB，VARCHAR2（8）；BRITHDAY，DATE；SEX，VARCHAR2（2）列
+SQL>create table EMP_TEST
+    (
+    ID INT,
+    NAME VARCHAR2(12),
+    JOB VARCHAR2(8),
+    BRITHDAY DATE,
+    SEX VARCHAR2(2)
+    );
+
+
+
+—— 新建EMP_NEW表，但不导入数据
+SQL>create table EMP_NEW as select * from emp where 1=2;
+
+
+
+—— 检查新表结构，并对比其与EMP表的结构
+SQL>describe emp_new 
+SQL>describe emp
+
+
+
+—— 使用MODIFY修改EMPNO的定义
+SQL>ALTER TABLE EMP_NEW
+    MODIFY(EMPNO NOT NULL);
+
+
+
+—— 查看新的表结构
+SQL>describe emp_new
+
+
+
+—— 为EMP_NEW增加新数列
+SQL>alter table emp_new
+    add (COUNTSAL NUMBER(4));
+
+
+
+—— 检查表结构，查看是否字段已经增加
+SQL>describe emp_new;
+
+
+
+—— 将EMPNO设置为主键
+SQL>alter table emp_new
+    add(CONSTRAINT PK_EMPNO PRIMARY KEY (EMPNO));
+
+
+
+—— 删除新建的列
+SQL>alter table emp_new
+    drop column countsal;
+SQL>describe emp_new;
+
+
+
+—— 新建约束条件
+SQL>alter table emp_new
+    drop primary key;
+
+
+
+—— 删除EMP_NEW表
+SQL>drop table emp_new;
+
+
+
+—— 新表EMP_NEW，并为其导入EMP表中数据
+SQL>create table EMP_NEW as select * from emp where 1=1;
+
+
+
+—— 查看数据情况
+SQL>select empno from emp_new;
+
+
+
+—— 使用TRUNCATE命令清空数据表
+SQL>truncate table emp_new;
+
+
+
+—— INSERT命令，向表EMP_NEW中插入一条数据。并查看数据表内容
+SQL>insert into emp_new(empno,ename,job,hiredate,sal,deptno)
+    values(7560, 'WANG', 'SALESMAN', sysdate,0,10);
+
+
+
+—— INSERT命令，向EMP_NEW表中批量加载数据
+SQL>insert into emp_new(empno,ename,job,mgr,hiredate,sal,comm,deptno)
+    select empno,ename,job,mgr,hiredate,sal,comm,deptno
+    from emp;
+
+
+—— UPDATE命令，对EMP_NEW表中EMPNO为7560的ENAME改为CHEN
+SQL>update emp_new set ename='CHEN' where empno=7560;
+
+
+
+—— DELETE命令，删除EMP_NEW表中EMPNO为7560的数据
+SQL>delete emp_new where empno=7560;
+
+
+
+——执行COMMIT命令，将数据入库
+SQL>commit;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
